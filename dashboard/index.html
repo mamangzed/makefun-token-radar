@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols ranked by implied value</title>
+<meta name="description" content="A radar for token launches that have not happened yet: every pre-token protocol in the DefiLlama snapshot, ranked by an implied value computed from its own TVL, growth, age and chain breadth, with a farm plan for each one.">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span><span>Token&nbsp;Radar</span></a>
+    <nav class="top-meta" aria-label="Snapshot">
+      <span>Snapshot <b id="meta-asof">—</b></span>
+      <span>DefiLlama protocol index</span>
+      <span>Model <b id="meta-model">—</b></span>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+  <section class="hero">
+    <div>
+      <p class="kicker">Token launch radar · <span id="hero-count">—</span> pre-token protocols</p>
+      <h1>Which protocol is worth farming next?</h1>
+      <p class="lede">Every protocol in the snapshot that records no token, ranked by what its token would be worth if it launched today. The watchlist is the floor — every protocol above $50M of TVL with no token on record — and the early radar adds every rankable protocol below it. Each row carries a farm plan with real costs and times.</p>
+      <p class="caveat">Implied value is this radar&rsquo;s own estimate from the snapshot&rsquo;s figures, not a price and not a prediction that a token will launch. A protocol that <em>records</em> no token may still have one.</p>
+    </div>
+    <dl class="stats" aria-label="Coverage">
+      <div><dt>Watchlist covered</dt><dd id="stat-watch">—</dd></div>
+      <div><dt>Pre-token rows</dt><dd id="stat-board">—</dd></div>
+      <div><dt>Early rows below the floor</dt><dd id="stat-early">—</dd></div>
+      <div><dt>Live-token protocols set aside</dt><dd id="stat-live">—</dd></div>
+    </dl>
+  </section>
+
+  <section class="spotlight" aria-label="Top three">
+    <h2>Top of the board</h2>
+    <div class="cards" id="spotlight"></div>
+  </section>
+
+  <section class="controls" id="controls" aria-label="Board controls">
+    <div class="field grow">
+      <label for="q">Search</label>
+      <input id="q" type="search" placeholder="Name, slug, category or chain" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="category">Category</label>
+      <select id="category"><option value="all">All categories</option></select>
+    </div>
+    <div class="field">
+      <label for="chain">Chain</label>
+      <select id="chain"><option value="all">All chains</option></select>
+    </div>
+    <div class="field check">
+      <label class="check-label"><input id="watchlist-only" type="checkbox"> Watchlist only</label>
+    </div>
+    <div class="field">
+      <span class="field-label" id="tab-label">Token status</span>
+      <div class="tabs" role="group" aria-labelledby="tab-label">
+        <button type="button" id="tab-pre" aria-pressed="true">Pre-token</button>
+        <button type="button" id="tab-live" aria-pressed="false">Live token</button>
+      </div>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+  </section>
+
+  <section class="panel" aria-label="Board">
+    <div class="table-wrap">
+      <table id="board-table">
+        <caption>Pre-token protocols, strongest implied value first. Select a row for its model breakdown and farm plan.</caption>
+        <thead id="board-head"></thead>
+        <tbody id="board-body"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>
+        <h2>No protocol matches that filter</h2>
+        <p>Clear the search or pick another category or chain to see the board again.</p>
+        <button class="btn primary" type="button" id="clear-filters">Clear filters</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel model" aria-label="How implied value is computed">
+    <h2>How implied value is computed</h2>
+    <p class="sub">One function scores every protocol. No name is special-cased and no row is hand-picked; the page recomputes each row from the snapshot figures and checks it against the number the board carries.</p>
+    <p class="formula" id="formula"></p>
+    <div class="factors">
+      <div><h3>TVL</h3><p>The size of the economy a token would sit on top of. A quarter of TVL is the base — the same multiple for every protocol.</p></div>
+      <div><h3>Seven-day growth</h3><p>Momentum. Growth is clamped to −60%…+120% and moves the value by half its size, so a fast-growing protocol outranks a shrinking one at the same TVL.</p></div>
+      <div><h3>Age with no token</h3><p>Maturity. The longer a protocol has run without issuing, the more activity has piled up behind a launch that has not happened yet. It rises from 0.60 to 1.00 over three years.</p></div>
+      <div><h3>Chain breadth</h3><p>Distribution. Each extra chain a protocol runs on adds 3% (up to four extra chains): more chains, more wallets a launch would reach.</p></div>
+    </div>
+    <p class="sub">Left out on purpose: exchanges, bridges, liquid-staking and restaking products, wrapped or staked products and versioned pools. Their value accrues to a token that already trades, so they are not launches waiting to happen. The live-token protocols are set aside in the Live token tab with their market caps shown — a fact, not a model.</p>
+  </section>
+
+  <footer class="foot">
+    <p>Data: DefiLlama protocol index, snapshot <span id="foot-asof">—</span> (<span id="foot-source">—</span>). This page runs with no network; every figure it shows is in the snapshot the program read. Implied values are estimates, farm plans are a reader&rsquo;s starting point, and nothing here is financial advice.</p>
+  </footer>
+</main>
+
+<aside class="detail" id="detail" aria-labelledby="detail-title" hidden>
+  <div class="detail-head">
+    <div>
+      <p class="kicker" id="detail-rank">—</p>
+      <h2 id="detail-title">—</h2>
+      <p class="sub" id="detail-sub">—</p>
+    </div>
+    <button class="btn" type="button" id="detail-close" aria-label="Close details">Close</button>
+  </div>
+  <section class="detail-section">
+    <h3>Implied value</h3>
+    <dl class="equation" id="detail-model"></dl>
+    <p class="sub" id="detail-check"></p>
+  </section>
+  <section class="detail-section">
+    <h3>Farm plan <span class="sub" id="detail-budget"></span></h3>
+    <ol class="steps" id="detail-steps"></ol>
+    <p class="sub">Costs are estimates from the protocol&rsquo;s chain and size; gas moves with the network. Never pay to claim anything, and only ever claim from a link the protocol itself publishes.</p>
+  </section>
+</aside>
+<div class="scrim" id="scrim" hidden></div>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
